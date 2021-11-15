@@ -1,7 +1,8 @@
 const urlInputField = document.querySelector('#input_url');
 const urlSubmit = document.querySelector('#submit_url');
 urlSubmit.addEventListener('click', submitUrl);
-const baseURL = 'https://my-shortify.herokuapp.com';
+// const baseURL = 'https://my-shortify.herokuapp.com';
+const baseURL = 'http://localhost:8080';
 
 async function submitUrl(){
     const urlInput = document.querySelector('#input_url').value;
@@ -16,4 +17,4 @@ async function submitUrl(){
     shortLinkField.setAttribute('href', response.data);
 }
 
-document.body.style.backgroundColor = '#EAEAD2';
+document.body.style.backgroundColor = '#EADCA6';

@@ -1,27 +1,45 @@
+require('dotenv').config();
 const express = require("express");
-const router  = express.Router();
-// const { linksDb } = require('../../app');
 const { nanoid } = require("nanoid");
 const path = require('path');
+const mongoose = require('mongoose');
+const router  = express.Router();
+const ShortLink = require('./../models/link');
+// const { linksDb } = require('../../app');
+// const baseURL = 'https://my-shortify.herokuapp.com/';
+const baseURL = 'http://localhost:8080/';
+// let linksDb;
 
-const baseURL = 'https://my-shortify.herokuapp.com/';
-let linksDb;
+// function setRouterDB(db){
+    //     linksDb = db;
+    // }
 
-function setRouterDB(db){
-    linksDb = db;
-}
-
+mongoose.connect(process.env.DATABASE,() => {
+    console.log('DB connected');
+})
+// next({ status: 400, message: "Can't save"}) );
 router.post('/shorten', (req, res) => {
-    // URL Validator
     const userURL = req.body.url;
-    let shortURLKey = nanoid(6);
-    while(linksDb.getValue(shortURLKey)){
-        shortURLKey = nanoid(6);
-    }
-    const longURL = httpsIncluded(userURL);
-    linksDb.store(shortURLKey, { longURL, timesClicked: 0 });
-    const shortURL = `${baseURL}${shortURLKey}`;
-    res.send(shortURL);
+    //  existing URL Validator
+    findFreeKey()
+    .then(shortURLKey => {
+        const longURL = httpsIncluded(userURL);
+        const shortURL = `${baseURL}${shortURLKey}`;
+        ShortLink.create({
+            shortURL,
+            longURL
+        })
+        .then(() => {
+            res.send(shortURL);
+        })
+        .catch(error => console.log(error));
+    })
+    .catch(error => console.log(error));
+    // while(linksDb.getValue(shortURLKey)){
+    //     shortURLKey = nanoid(6);
+    // }
+    // linksDb.store(shortURLKey, { longURL, timesClicked: 0 });
+    // ShortLink.update()
 })
 
 router.get('/:shortURL', (req, res, next) => {
@@ -37,6 +55,7 @@ router.get('/:shortURL', (req, res, next) => {
 })
 
 router.get('/', (req, res) => {
+    // res.sendFile('index.html', '/views');
     res.sendFile(path.join(__dirname, '../../views/index.html'));
 })
 
@@ -51,7 +70,14 @@ function httpsIncluded(url){
     return urlBeginning === httpsStart ? url : `${httpsStart}${url}`;
 }
 
-module.exports = {
-    router,
-    setRouterDB
+function findFreeKey(){
+    let shortURLKey = nanoid(6);
+    return ShortLink.findOne({ shortURL: shortURLKey })
+    .then(shortLink => {
+        return shortLink ? findFreeKey() : shortURLKey;
+    })
+    .catch(() => console.log('No data'));
 }
+
+module.exports = router;
+// setRouterDB

@@ -2,7 +2,7 @@
     margin: auto;
     height: 70vh;
     width: 100vw;
-    background-color: #EAEAD2;
+    background-color: #EADCA6;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
@@ -11,7 +11,7 @@
 }
 
 .div1 {
-    background-color: #EAEAD2;
+    background-color: #EADCA6;
     grid-area: 2 / 2 / 10 / 10;
 }
 #intro_field {
