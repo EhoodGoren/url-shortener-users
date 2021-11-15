@@ -5,53 +5,45 @@ const path = require('path');
 const mongoose = require('mongoose');
 const router  = express.Router();
 const ShortLink = require('./../models/link');
-// const { linksDb } = require('../../app');
 // const baseURL = 'https://my-shortify.herokuapp.com/';
 const baseURL = 'http://localhost:8080/';
-// let linksDb;
-
-// function setRouterDB(db){
-    //     linksDb = db;
-    // }
 
 mongoose.connect(process.env.DATABASE,() => {
     console.log('DB connected');
 })
-// next({ status: 400, message: "Can't save"}) );
+
 router.post('/shorten', (req, res) => {
     const userURL = req.body.url;
     //  existing URL Validator
     findFreeKey()
     .then(shortURLKey => {
         const longURL = httpsIncluded(userURL);
-        const shortURL = `${baseURL}${shortURLKey}`;
         ShortLink.create({
-            shortURL,
+            'shortURL-key':shortURLKey,
             longURL
         })
         .then(() => {
-            res.send(shortURL);
+            const fullShortURL = `${baseURL}${shortURLKey}`;
+            res.send(fullShortURL);
         })
         .catch(error => console.log(error));
     })
     .catch(error => console.log(error));
-    // while(linksDb.getValue(shortURLKey)){
-    //     shortURLKey = nanoid(6);
-    // }
-    // linksDb.store(shortURLKey, { longURL, timesClicked: 0 });
-    // ShortLink.update()
 })
 
 router.get('/:shortURL', (req, res, next) => {
     const shortURL = req.params.shortURL;
-    const shortURLData = linksDb.getValue(shortURL);
-    if(!shortURLData) next('404');
-    else{
-        const longURL = shortURLData.longURL;
-        linksDb.store(shortURL, { longURL, timesClicked: linksDb.getValue(shortURL).timesClicked + 1});
-        res.redirect(longURL);
-        // res.send();
-    }
+    ShortLink.findOne({'shortURL-key': shortURL})
+    .then(shortLinkObj => {
+        if(!shortLinkObj){
+            return next( {status: 404, message: "Short link doesn't exist"} );
+        }
+        else{
+            // Increase click count
+            res.redirect(shortLinkObj.longURL);
+        }
+    })
+    .catch(error => console.log(error));
 })
 
 router.get('/', (req, res) => {
@@ -61,8 +53,8 @@ router.get('/', (req, res) => {
 
 /**
  * 
- * @param {string} url - A url with or without 'https://' at the start
- * @returns {string} - A url with 'https://' at the start
+ * @param {String} url - A url with or without 'https://' at the start
+ * @returns {String} - A url with 'https://' at the start
  */
 function httpsIncluded(url){
     const httpsStart = 'https://';
@@ -70,14 +62,17 @@ function httpsIncluded(url){
     return urlBeginning === httpsStart ? url : `${httpsStart}${url}`;
 }
 
+/**
+ * Generates random short keys, until finding one that isn't taken yet.
+ * @returns {String} Generated key.
+ */
 function findFreeKey(){
-    let shortURLKey = nanoid(6);
-    return ShortLink.findOne({ shortURL: shortURLKey })
-    .then(shortLink => {
-        return shortLink ? findFreeKey() : shortURLKey;
+    let shortURL_key = nanoid(6);
+    return ShortLink.findOne({ 'shortURL-key': shortURL_key })
+    .then(shortLinkObj => {
+        return shortLinkObj ? findFreeKey() : shortURL_key;
     })
     .catch(() => console.log('No data'));
 }
 
 module.exports = router;
-// setRouterDB

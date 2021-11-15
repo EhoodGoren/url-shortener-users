@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const linkSchema = new mongoose.Schema(
     {
-        shortURL: {
+        'shortURL-key': {
             type: String,
             required: true
         },
