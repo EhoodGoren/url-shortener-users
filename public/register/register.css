@@ -1,0 +1,37 @@
+body {
+    width: 100vw;
+    height: 100vh;
+    background-color: #EADCA6;
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(16, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+    
+#page_title { grid-area: 1 / 4 / 2 / 7; }
+#register_form { grid-area: 3 / 3 / 16 / 8; }
+#username { grid-area: 4 / 4 / 5 / 7; }
+#email { grid-area: 6 / 4 / 7 / 7; }
+#password { grid-area: 8 / 4 / 9 / 7; }
+#password2 { grid-area: 10 / 4 / 11 / 7; }
+#submit { grid-area: 12 / 5 / 13 / 6; }
+#result { grid-area: 14 / 4 / 15 / 7; }
+
+#register_form {
+    background-color: #B4420E;
+}
+
+.credentials{
+    border: black 1px solid;
+    /* display: flex;
+    align-items: center;
+    justify-content: center; */
+}
+
+.credentials > * {
+    width: 80%;
+    height: 80%;
+    font-size: 150%;
+    color: white;
+}
