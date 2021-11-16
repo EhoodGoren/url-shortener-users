@@ -16,8 +16,8 @@ router.post('/', (req, res, next) => {
         if(!user){
             return next({ status: 400, message: 'Email or password are wrong. Try again.' });
         }
-        res.send(`Welcome ${user.username}`);
-        //logined. start session.
+        //res.redirect('/');
+        res.send('success');
     })
     .catch(error => console.log(error));
 })

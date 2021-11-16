@@ -5,6 +5,8 @@ const path = require('path');
 const User = require('./../models/user')
 const router = express.Router();
 
+const baseURL = 'http://localhost:8080';
+
 mongoose.connect(process.env.DATABASE,() => {
     console.log('DB connected');
 })
@@ -29,7 +31,8 @@ router.post('/', (req, res, next) => {
             password
         })
         .then(() => {
-            res.redirect('/login');
+            // res.redirect('/login');
+            res.send('login');
         })
         .catch(error => console.log(error));
     })

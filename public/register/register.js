@@ -17,6 +17,9 @@ async function submitClicked(){
         const response = await axios.post(`${baseURL}/register`, {
             username, email, password
         })
+        if(response.data === 'login'){
+            window.location.href = `${baseURL}/login`;
+        }
     }
     catch(error){
         displayResult(error.response.data.error);

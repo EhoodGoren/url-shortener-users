@@ -13,7 +13,8 @@ async function submitClicked(){
         const response = await axios.post(`${baseURL}/login`, {
             email, password
         })
-        displayResult(response.data);
+        if(response.data === 'success')
+            window.location.href = baseURL;
     }
     catch(error){
         displayResult(error.response.data.error);
