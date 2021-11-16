@@ -21,7 +21,7 @@ router.post('/', (req, res, next) => {
         }
 
         const userToken = generateToken(user.username);
-        res.cookie('token', userToken);
+        res.cookie('token', userToken, { expires: new Date(Date.now() + 3600000) });
 
         //res.redirect('/');
         res.send('success');
