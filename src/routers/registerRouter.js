@@ -9,7 +9,7 @@ mongoose.connect(process.env.DATABASE,() => {
     console.log('DB connected');
 })
 
-router.post('/', (req, res) => {
+router.post('/', (req, res, next) => {
     const { username, email, password } = req.body;
     User.findOne({
         $or: [
@@ -18,9 +18,11 @@ router.post('/', (req, res) => {
         ]
     })
     .then(userObj => {
-        if (userObj) handleExistingUser(userObj, username, email);
-        console.log('check exit');
-        // else
+        if (userObj) {
+            const takenMessage = handleExistingUser(userObj, username, email);
+            return next({ status: 400, message: takenMessage});
+        }
+            
         User.create({
             username,
             email,
@@ -40,12 +42,10 @@ router.get('/', (req, res) => {
 
 
 function handleExistingUser(userObj, username, email){
-    switch (userObj) {
-        case userObj.username === username:
-            return res.status(400).send('Username is already in use. Try using another');
-        case userObj.email === email:
-            return res.status(400).send('Email is already in use. Try using another');
-    }
+    if(userObj.username === username)
+        return 'Username is already in use. Try using another.';
+    if(userObj.email === email)
+        return 'Email is already in use. Try using another.';
 }
 
 

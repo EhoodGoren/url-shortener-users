@@ -18,15 +18,16 @@ body {
 #submit { grid-area: 12 / 5 / 13 / 6; }
 #result { grid-area: 14 / 4 / 15 / 7; }
 
+#page_title {
+    text-align: center;
+}
+
 #register_form {
     background-color: #B4420E;
 }
 
 .credentials{
     border: black 1px solid;
-    /* display: flex;
-    align-items: center;
-    justify-content: center; */
 }
 
 .credentials > * {
