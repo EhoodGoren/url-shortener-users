@@ -1,11 +1,7 @@
 const baseURL = 'http://localhost:8080';
 document.querySelector('#submit').addEventListener('click', submitClicked);
 
-function submitClicked(){
-    if(!checkGoodData()) return;
-}
-
-async function checkGoodData(){
+async function submitClicked(){
     const username = document.querySelector('#username').value;
     const email = document.querySelector('#email').value;
     const password = document.querySelector('#password').value;

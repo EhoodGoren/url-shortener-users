@@ -9,11 +9,15 @@ mongoose.connect(process.env.DATABASE,() => {
     console.log('DB connected');
 })
 
-router.post('/', (req, res) => {
+router.post('/', (req, res, next) => {
     const { email, password } = req.body;
-    User.find({ email, password })
+    User.findOne({ email, password })
     .then(user => {
-        console.log(user);
+        if(!user){
+            return next({ status: 400, message: 'Email or password are wrong. Try again.' });
+        }
+        res.send(`Welcome ${user.username}`);
+        //logined. start session.
     })
     .catch(error => console.log(error));
 })
