@@ -64,7 +64,7 @@ function httpsIncluded(url){
 
 /**
  * Generates random short keys, until finding one that isn't taken yet.
- * @returns {String} Generated key.
+ * @returns Generated key.
  */
 function findFreeKey(){
     let shortURL_key = nanoid(6);
