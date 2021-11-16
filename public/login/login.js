@@ -28,3 +28,7 @@ function displayResult(message){
         resultField.innerText = '';
     }, 3000);
 }
+
+document.querySelector('#register').addEventListener('click', () => {
+    window.location.href = `${baseURL}/register`;
+})

@@ -36,3 +36,7 @@ body {
     font-size: 150%;
     color: white;
 }
+
+#register {
+    grid-area: 15 / 7 / 16 / 8;
+}
